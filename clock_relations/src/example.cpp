@@ -85,7 +85,7 @@ struct IdRelation
         );
     }
 
-    static struct Hash
+    struct Hash
     {
         // see https://en.cppreference.com/w/cpp/utility/hash
         std::size_t operator()(IdRelation const& x) const noexcept
