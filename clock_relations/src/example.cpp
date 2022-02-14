@@ -23,17 +23,27 @@ struct LinearRelation
     double offset = 0;
     double scale = 1;
 
+    LinearRelation inverse() const
+    {
+        // x = (y - offset) / scale
+        // x = y/scale - offset/scale
+        LinearRelation inv;
+        inv.scale = 1/scale;
+        inv.offset = -offset/scale;
+        return inv;
+    }
+
     // as_time is like homogeneous vector entry 1.0
     // setting it to false, treats x as duration, i.e.
     // as one dimensional direction vector instead of 
     // one dimensional position vector. only scale is, 
     // applied similar to how direction vectors are not
     // translated by transformation matrices in linear algebra.
-    double applyForward(double x, bool as_time = true)
+    double applyForward(double x, bool as_time = true) const
     {
         return x * scale + (as_time ? offset : 0);
     }
-    double applyBackward(double y, bool as_time = true)
+    double applyBackward(double y, bool as_time = true) const
     {
         return (as_time ? y - offset : y) / scale;
     }
