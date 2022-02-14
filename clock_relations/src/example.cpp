@@ -17,6 +17,7 @@ struct ClockTime
 
 struct LinearRelation
 {
+    // y = f(x)
     // y = x * scale + offset
     // x = (y - offset) / scale
 
@@ -33,12 +34,13 @@ struct LinearRelation
         return inv;
     }
 
-    // as_time is like homogeneous vector entry 1.0
+    // as_time is like homogeneous vector entry 1.0.
     // setting it to false, treats x as duration, i.e.
     // as one dimensional direction vector instead of 
-    // one dimensional position vector. only scale is, 
-    // applied similar to how direction vectors are not
-    // translated by transformation matrices in linear algebra.
+    // one dimensional position vector. only scale is 
+    // applied, similar to how direction vectors are not
+    // translated by transformation matrices in linear algebra,
+    // but only scaled and rotated.
     double applyForward(double x, bool as_time = true) const
     {
         return x * scale + (as_time ? offset : 0);
@@ -205,6 +207,7 @@ struct EstimateClockRelation
                 auto offset1 = b1 - scale * a1;
 
                 auto offset = (offset0 + offset1) * 0.5;
+
                 // observedRelations.push_back(LinearRelation{offset, scale});
                 const double weight = 1.0;
                 sum.offset += weight * offset;
@@ -236,6 +239,18 @@ protected:
 
 };
 
+
+struct ClockRelationGraph
+{
+    std::vector<ClockId> nodes;
+    std::unordered_map<ClockId, ClockId> edges;
+
+    void insert(IdRelation edge, EstimateClockRelation& estimator)
+    {
+
+    }
+};
+
 struct EstimateClockRelations
 {
     void reportCorrespondence(const ClockTimeCorrespondence x)
@@ -244,10 +259,11 @@ struct EstimateClockRelations
         if (estimates.count(key) == 0)
         {
             estimates[key].setup(key);
+            graph.insert(key, estimates[key]);
         }
         estimates[key].reportCorrespondence(static_cast<TimeCorrespondence>(x));
     }
-
+    ClockRelationGraph graph;
     std::unordered_map<IdRelation, EstimateClockRelation, IdRelation::Hash> estimates;
 };
 
