@@ -1,2 +1,2 @@
 # cpp_clock_relations
-track relation between different clocks
+track relation between different classical clocks
