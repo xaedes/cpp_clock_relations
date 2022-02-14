@@ -60,10 +60,10 @@ struct MockClock
 
     LinearRelation world_relation;
 
-    ClockTime now() {
+    ClockTime now() const {
         return ClockTime{id, nowRaw()};
     }
-    double nowRaw() {
+    double nowRaw() const {
         return current;
     }
     void advance(double world_duration) {
